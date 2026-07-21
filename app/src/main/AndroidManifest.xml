@@ -25,27 +25,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".features.onboarding.OnBoardingActivity"
+            android:name=".ui.onboarding.OnBoardingActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".features.auth.activity.LoginActivity"
+            android:name=".ui.auth.activity.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".features.auth.activity.SignupActivity"
+            android:name=".ui.auth.activity.SignupActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".features.dashboard.DashboardActivity"
+            android:name=".ui.dashboard.DashboardActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".features.search.SearchActivity"
+            android:name=".ui.search.SearchActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".features.recipeDetail.RecipeDetailActivity"
+            android:name=".ui.recipeDetail.RecipeDetailActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
     </application>
