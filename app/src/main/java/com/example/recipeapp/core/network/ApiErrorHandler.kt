@@ -7,6 +7,11 @@ import retrofit2.HttpException
 import java.io.IOException
 object ApiErrorHandler {
     suspend fun <T> safeApiCall(apiCall: suspend () -> T): NetworkResult<T> {
+        // Checked before ever touching the network so an offline device fails fast with a
+        // clear message instead of waiting out a connect-timeout first.
+        if (!ConnectivityChecker.isConnected()) {
+            return NetworkResult.Error("No internet connection", type = NetworkErrorType.NO_INTERNET)
+        }
         return try {
             NetworkResult.Success(apiCall())
         } catch (e: CancellationException) {
@@ -16,16 +21,16 @@ object ApiErrorHandler {
             throw e
         } catch (e: HttpException) {
             Log.e("ApiError",e.toString())
-            NetworkResult.Error(e.localizedMessage ?: "Server error", e.code())
+            NetworkResult.Error(e.localizedMessage ?: "Server error", e.code(), NetworkErrorType.HTTP)
         } catch (e: IOException) {
             Log.e("ApiError",e.toString())
-            NetworkResult.Error("No internet connection")
+            NetworkResult.Error("No internet connection", type = NetworkErrorType.NO_INTERNET)
         } catch (e: SerializationException) {
             Log.e("ApiError",e.toString())
-            NetworkResult.Error("Unexpected response format")
+            NetworkResult.Error("Unexpected response format", type = NetworkErrorType.PARSING)
         } catch (e: Exception) {
             Log.e("ApiError",e.toString())
-            NetworkResult.Error(e.localizedMessage ?: "Unknown error")
+            NetworkResult.Error(e.localizedMessage ?: "Unknown error", type = NetworkErrorType.UNKNOWN)
         }
     }
 }

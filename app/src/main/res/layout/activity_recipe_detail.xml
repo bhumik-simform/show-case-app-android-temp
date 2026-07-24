@@ -323,21 +323,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_error"
+    <com.example.recipeapp.common.error.ErrorStateView
+        android:id="@+id/error_state_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_lg"
-        android:fontFamily="@font/poppins_regular"
-        android:gravity="center"
-        android:textColor="@color/gray_3"
-        android:textSize="14sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Something went wrong"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

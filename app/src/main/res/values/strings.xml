@@ -70,6 +70,7 @@
     <string name="saved_recipe_remove_error">Couldn\'t update saved recipes. Please try again.</string>
     <string name="error_something_went_wrong">Something went wrong</string>
     <string name="error_try_again">Try Again</string>
+    <string name="dummy_data_showing_message">Dummy data is showing</string>
 
     <!-- Diet Filter Bottom Sheet (shared: Home + Search) -->
     <string name="filter_sheet_title">Filter Search</string>

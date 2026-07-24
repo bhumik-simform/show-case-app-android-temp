@@ -119,4 +119,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
+
+    <com.example.recipeapp.common.error.ErrorStateView
+        android:id="@+id/error_state_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

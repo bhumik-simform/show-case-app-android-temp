@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.core.base.FilterState
 import com.example.recipeapp.core.base.UiState
 import com.example.recipeapp.core.network.NetworkResult
+import com.example.recipeapp.core.network.toUiState
 import com.example.recipeapp.storage.session.SessionStorage
 import com.example.recipeapp.domain.recipe.repository.RecipeRepository
 import com.example.recipeapp.data.recipes.options.FilterOption
@@ -134,7 +135,7 @@ class HomeViewModel(
                     _exploreUiState.value = UiState.Success(exploreItems.toList())
                 }
                 is NetworkResult.Error -> {
-                    _exploreUiState.value = UiState.Error(result.message)
+                    _exploreUiState.value = result.toUiState()
                 }
                 is NetworkResult.Loading -> Unit
             }
@@ -150,7 +151,7 @@ class HomeViewModel(
                     _savedUiState.value = UiState.Success(result.data)
                 }
                 is NetworkResult.Error -> {
-                    _savedUiState.value = UiState.Error(result.message)
+                    _savedUiState.value = result.toUiState()
                 }
                 is NetworkResult.Loading -> Unit
             }

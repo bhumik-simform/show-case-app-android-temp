@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Error message text, centered within its own bounds. -->
+    <TextView
+        android:id="@+id/tv_error_state_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        tools:text="Something went wrong. Please try again after a while." />
+
+    <!-- Optional clickable action (e.g. "Try Again") — hidden unless ErrorStateView.setup()
+         is called with a non-null actionText + onAction. -->
+    <TextView
+        android:id="@+id/tv_error_state_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_md"
+        android:fontFamily="@font/poppins_semibold"
+        android:textColor="@color/primary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="Try Again"
+        tools:visibility="visible" />
+
+</merge>

@@ -25,6 +25,7 @@ class FallbackRecipeRepository(
     ): NetworkResult<T> {
         val result = remoteCall()
         return if (result is NetworkResult.Error && result.code == QUOTA_EXCEEDED_CODE) {
+            DummyDataSignal.notifyDummyDataShown()
             dummyCall()
         } else {
             result

@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp.R
 import com.example.recipeapp.common.filter.DietFilterBottomSheet
+import com.example.recipeapp.common.toast.DummyDataToast
 import com.example.recipeapp.core.base.UiState
 import com.example.recipeapp.databinding.FragmentHomeBinding
+import com.example.recipeapp.domain.recipe.repository.DummyDataSignal
 import com.example.recipeapp.ui.dashboard.DashboardActivity
 import com.example.recipeapp.ui.dashboard.home.adapter.ChipsAdapter
 import com.example.recipeapp.ui.dashboard.home.adapter.ExploreHeaderAdapter
@@ -148,6 +150,7 @@ class HomeFragment : Fragment() {
                         when (state) {
                             is UiState.Success -> {
                                 binding.pbLoading.visibility = View.GONE
+                                binding.errorStateView.visibility = View.GONE
                                 binding.rvHome.visibility = View.VISIBLE
                                 exploreRecipesAdapter.submitList(state.data)
                             }
@@ -157,11 +160,19 @@ class HomeFragment : Fragment() {
                                 // so the RecyclerView skips measure/layout/draw entirely
                                 // during this window.
                                 binding.pbLoading.visibility = View.VISIBLE
+                                binding.errorStateView.visibility = View.GONE
                                 binding.rvHome.visibility = View.GONE
                             }
                             is UiState.Error -> {
                                 binding.pbLoading.visibility = View.GONE
-                                binding.rvHome.visibility = View.VISIBLE
+                                binding.rvHome.visibility = View.GONE
+                                binding.errorStateView.visibility = View.VISIBLE
+                                binding.errorStateView.setup(
+                                    message = state.message,
+                                    actionText = getString(R.string.error_try_again),
+                                    actionColor = requireContext().getColor(R.color.primary),
+                                    onAction = { viewModel.loadInitial() }
+                                )
                             }
                             else -> Unit
                         }
@@ -172,6 +183,7 @@ class HomeFragment : Fragment() {
                         when (state) {
                             is UiState.Success -> {
                                 savedRecipesAdapter.submitList(state.data)
+                                savedSectionAdapter.setHasItems(state.data.isNotEmpty())
                             }
                             else -> Unit
                         }

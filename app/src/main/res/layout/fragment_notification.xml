@@ -112,7 +112,7 @@
                     android:layout_height="64dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_notification_outlined"
-                    android:tint="@color/gray_4" />
+                    app:tint="@color/gray_4" />
 
                 <TextView
                     android:id="@+id/tv_notification_empty_title"

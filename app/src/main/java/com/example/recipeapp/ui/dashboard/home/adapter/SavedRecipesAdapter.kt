@@ -2,6 +2,8 @@ package com.example.recipeapp.ui.dashboard.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import coil3.request.error
@@ -12,9 +14,7 @@ import com.example.recipeapp.data.recipes.uimodel.RecipeCardUiModel
 
 class SavedRecipesAdapter(
     private val onItemClick: (recipeId: Int) -> Unit
-) : RecyclerView.Adapter<SavedRecipesAdapter.SavedRecipeViewHolder>() {
-
-    private val items = mutableListOf<RecipeCardUiModel>()
+) : ListAdapter<RecipeCardUiModel, SavedRecipesAdapter.SavedRecipeViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedRecipeViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -22,15 +22,7 @@ class SavedRecipesAdapter(
     }
 
     override fun onBindViewHolder(holder: SavedRecipeViewHolder, position: Int) {
-        holder.bind(items[position])
-    }
-
-    override fun getItemCount(): Int = items.size
-
-    fun submitList(recipes: List<RecipeCardUiModel>) {
-        items.clear()
-        items.addAll(recipes)
-        notifyDataSetChanged()
+        holder.bind(getItem(position))
     }
 
      class SavedRecipeViewHolder(
@@ -59,6 +51,16 @@ class SavedRecipesAdapter(
             itemView.setOnClickListener {
                 onItemClick(item.id)
             }
+        }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<RecipeCardUiModel>() {
+            override fun areItemsTheSame(oldItem: RecipeCardUiModel, newItem: RecipeCardUiModel) =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: RecipeCardUiModel, newItem: RecipeCardUiModel) =
+                oldItem == newItem
         }
     }
 }

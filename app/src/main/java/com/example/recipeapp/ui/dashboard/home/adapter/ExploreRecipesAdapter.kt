@@ -2,6 +2,8 @@ package com.example.recipeapp.ui.dashboard.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import coil3.request.error
@@ -13,9 +15,7 @@ import com.example.recipeapp.data.recipes.uimodel.RecipeCardUiModel
 class ExploreRecipesAdapter(
     private val onSaveClick: (recipeId: Int) -> Unit,
     private val onItemClick: (recipeId: Int) -> Unit
-) : RecyclerView.Adapter<ExploreRecipesAdapter.ExploreRecipeViewHolder>() {
-
-    private val items = mutableListOf<RecipeCardUiModel>()
+) : ListAdapter<RecipeCardUiModel, ExploreRecipesAdapter.ExploreRecipeViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExploreRecipeViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -23,15 +23,7 @@ class ExploreRecipesAdapter(
     }
 
     override fun onBindViewHolder(holder: ExploreRecipeViewHolder, position: Int) {
-        holder.bind(items[position])
-    }
-
-    override fun getItemCount(): Int = items.size
-
-    fun submitList(recipes: List<RecipeCardUiModel>) {
-        items.clear()
-        items.addAll(recipes)
-        notifyDataSetChanged()
+        holder.bind(getItem(position))
     }
 
     inner class ExploreRecipeViewHolder(
@@ -56,7 +48,7 @@ class ExploreRecipesAdapter(
             itemView.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position == RecyclerView.NO_POSITION) return@setOnClickListener
-                onItemClick(items[position].id)
+                onItemClick(getItem(position).id)
             }
         }
 
@@ -71,8 +63,18 @@ class ExploreRecipesAdapter(
             binding.btnSave.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position == RecyclerView.NO_POSITION) return@setOnClickListener
-                onSaveClick(items[position].id)
+                onSaveClick(getItem(position).id)
             }
+        }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<RecipeCardUiModel>() {
+            override fun areItemsTheSame(oldItem: RecipeCardUiModel, newItem: RecipeCardUiModel) =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: RecipeCardUiModel, newItem: RecipeCardUiModel) =
+                oldItem == newItem
         }
     }
 }

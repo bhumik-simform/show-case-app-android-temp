@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeapp.core.base.UiState
 import com.example.recipeapp.core.network.NetworkResult
+import com.example.recipeapp.core.network.toUiState
 import com.example.recipeapp.domain.recipe.repository.RecipeRepository
 import com.example.recipeapp.data.recipes.uimodel.RecipeDetailUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,14 +24,11 @@ class RecipeDetailViewModel(
     fun loadRecipeDetail(recipeId: Int) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-            when (val result = recipeRepository.getRecipeDetail(recipeId)) {
-                is NetworkResult.Success -> {
-                    _uiState.value = UiState.Success(result.data)
-                    _targetServings.value = result.data.servings.coerceAtLeast(MIN_SERVINGS)
-                }
-                is NetworkResult.Error -> _uiState.value = UiState.Error(result.message)
-                NetworkResult.Loading -> Unit
+            val result = recipeRepository.getRecipeDetail(recipeId)
+            if (result is NetworkResult.Success) {
+                _targetServings.value = result.data.servings.coerceAtLeast(MIN_SERVINGS)
             }
+            _uiState.value = result.toUiState()
         }
     }
 

@@ -3,14 +3,14 @@ package com.example.recipeapp.ui.recipeDetail.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeapp.R
 import com.example.recipeapp.databinding.ItemInstructionStepBinding
 import com.example.recipeapp.data.recipes.uimodel.StepUiModel
 
-class InstructionStepsAdapter : RecyclerView.Adapter<InstructionStepsAdapter.StepViewHolder>() {
-
-    private val items = mutableListOf<StepUiModel>()
+class InstructionStepsAdapter : ListAdapter<StepUiModel, InstructionStepsAdapter.StepViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StepViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -18,15 +18,7 @@ class InstructionStepsAdapter : RecyclerView.Adapter<InstructionStepsAdapter.Ste
     }
 
     override fun onBindViewHolder(holder: StepViewHolder, position: Int) {
-        holder.bind(items[position])
-    }
-
-    override fun getItemCount(): Int = items.size
-
-    fun submitList(steps: List<StepUiModel>) {
-        items.clear()
-        items.addAll(steps)
-        notifyDataSetChanged()
+        holder.bind(getItem(position))
     }
 
     class StepViewHolder(
@@ -49,6 +41,16 @@ class InstructionStepsAdapter : RecyclerView.Adapter<InstructionStepsAdapter.Ste
                     item.requiredIngredientNames.joinToString(", ")
                 )
             }
+        }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StepUiModel>() {
+            override fun areItemsTheSame(oldItem: StepUiModel, newItem: StepUiModel) =
+                oldItem.number == newItem.number
+
+            override fun areContentsTheSame(oldItem: StepUiModel, newItem: StepUiModel) =
+                oldItem == newItem
         }
     }
 }

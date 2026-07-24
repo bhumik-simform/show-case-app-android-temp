@@ -21,7 +21,9 @@ import coil3.request.placeholder
 import com.example.recipeapp.R
 import com.example.recipeapp.common.itemdecor.VerticalSpaceItemDecoration
 import com.example.recipeapp.common.popup.StyledPopupMenu
+import com.example.recipeapp.common.toast.DummyDataToast
 import com.example.recipeapp.core.base.UiState
+import com.example.recipeapp.domain.recipe.repository.DummyDataSignal
 import com.example.recipeapp.databinding.ActivityRecipeDetailBinding
 import com.example.recipeapp.databinding.DialogRecipeLinkBinding
 import com.example.recipeapp.ui.recipeDetail.adapter.IngredientsAdapter
@@ -42,6 +44,7 @@ class RecipeDetailActivity : AppCompatActivity() {
     private val instructionStepsAdapter = InstructionStepsAdapter()
 
     private var currentRecipe: RecipeDetailUiModel? = null
+    private var recipeId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +57,7 @@ class RecipeDetailActivity : AppCompatActivity() {
             insets
         }
 
-        val recipeId = intent.getIntExtra(EXTRA_RECIPE_ID, -1)
+        recipeId = intent.getIntExtra(EXTRA_RECIPE_ID, -1)
         if (recipeId == -1) {
             finish()
             return
@@ -175,19 +178,25 @@ class RecipeDetailActivity : AppCompatActivity() {
                         when (state) {
                             is UiState.Loading -> {
                                 binding.pbLoading.visibility = View.VISIBLE
-                                binding.tvError.visibility = View.GONE
+                                binding.errorStateView.visibility = View.GONE
+                                binding.nsvContent.visibility = View.GONE
                             }
                             is UiState.Success -> {
                                 binding.pbLoading.visibility = View.GONE
-                                binding.tvError.visibility = View.GONE
+                                binding.errorStateView.visibility = View.GONE
                                 binding.nsvContent.visibility = View.VISIBLE
                                 bindRecipe(state.data)
                             }
                             is UiState.Error -> {
                                 binding.pbLoading.visibility = View.GONE
                                 binding.nsvContent.visibility = View.GONE
-                                binding.tvError.visibility = View.VISIBLE
-                                binding.tvError.text = state.message
+                                binding.errorStateView.visibility = View.VISIBLE
+                                binding.errorStateView.setup(
+                                    message = state.message,
+                                    actionText = getString(R.string.error_try_again),
+                                    actionColor = getColor(R.color.primary),
+                                    onAction = { viewModel.loadRecipeDetail(recipeId) }
+                                )
                             }
                             is UiState.Idle -> Unit
                         }
@@ -197,6 +206,11 @@ class RecipeDetailActivity : AppCompatActivity() {
                     viewModel.targetServings.collect { servings ->
                         binding.tvServingsCount.text = servings.toString()
                         ingredientsAdapter.updateTargetServings(servings)
+                    }
+                }
+                launch {
+                    DummyDataSignal.events.collect {
+                        DummyDataToast.show(this@RecipeDetailActivity)
                     }
                 }
             }
@@ -235,7 +249,7 @@ class RecipeDetailActivity : AppCompatActivity() {
 
         binding.tvReadyTime.text = getString(R.string.recipe_detail_ready_minutes, recipe.readyInMinutes)
 
-        ingredientsAdapter.submitList(recipe.ingredients, recipe.servings)
+        ingredientsAdapter.submitIngredients(recipe.ingredients, recipe.servings)
         instructionStepsAdapter.submitList(recipe.instructionSteps)
 
         updateSectionVisibility(binding.tabRecipeSections.selectedTabPosition)

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_toast_dummy_data"
+    android:fontFamily="@font/poppins_regular"
+    android:paddingHorizontal="@dimen/spacing_md"
+    android:paddingVertical="@dimen/spacing_sm"
+    android:text="@string/dummy_data_showing_message"
+    android:textColor="@color/gray_1"
+    android:textSize="11sp" />

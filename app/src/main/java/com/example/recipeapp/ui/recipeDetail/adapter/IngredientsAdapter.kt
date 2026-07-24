@@ -2,6 +2,8 @@ package com.example.recipeapp.ui.recipeDetail.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil3.load
 import coil3.request.error
@@ -10,9 +12,8 @@ import com.example.recipeapp.R
 import com.example.recipeapp.databinding.ItemIngredientBinding
 import com.example.recipeapp.data.recipes.uimodel.IngredientUiModel
 
-class IngredientsAdapter : RecyclerView.Adapter<IngredientsAdapter.IngredientViewHolder>() {
+class IngredientsAdapter : ListAdapter<IngredientUiModel, IngredientsAdapter.IngredientViewHolder>(DIFF_CALLBACK) {
 
-    private val items = mutableListOf<IngredientUiModel>()
     private var baseServings: Int = 1
     private var targetServings: Int = 1
 
@@ -22,22 +23,18 @@ class IngredientsAdapter : RecyclerView.Adapter<IngredientsAdapter.IngredientVie
     }
 
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
-        holder.bind(items[position], baseServings, targetServings)
+        holder.bind(getItem(position), baseServings, targetServings)
     }
 
-    override fun getItemCount(): Int = items.size
-
-    fun submitList(ingredients: List<IngredientUiModel>, baseServings: Int) {
-        items.clear()
-        items.addAll(ingredients)
+    fun submitIngredients(ingredients: List<IngredientUiModel>, baseServings: Int) {
         this.baseServings = baseServings
         this.targetServings = baseServings
-        notifyDataSetChanged()
+        submitList(ingredients)
     }
 
     fun updateTargetServings(targetServings: Int) {
         this.targetServings = targetServings
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount)
     }
 
     class IngredientViewHolder(
@@ -51,6 +48,16 @@ class IngredientsAdapter : RecyclerView.Adapter<IngredientsAdapter.IngredientVie
                 placeholder(R.drawable.ic_default_image)
                 error(R.drawable.ic_default_image)
             }
+        }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<IngredientUiModel>() {
+            override fun areItemsTheSame(oldItem: IngredientUiModel, newItem: IngredientUiModel) =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: IngredientUiModel, newItem: IngredientUiModel) =
+                oldItem == newItem
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.recipeapp.core.base
 
+import com.example.recipeapp.core.network.NetworkErrorType
 import com.example.recipeapp.data.recipes.options.FilterOption
 
 enum class AuthField {
@@ -18,7 +19,9 @@ sealed class UiState<out T> {
     data class Success<T>(val data: T) : UiState<T>()
     data class Error(
         val message: String,
-        val fieldErrors: Map<AuthField, String> = emptyMap()
+        val fieldErrors: Map<AuthField, String> = emptyMap(),
+        val code: Int? = null,
+        val type: NetworkErrorType = NetworkErrorType.UNKNOWN
     ) : UiState<Nothing>()
 }
 
